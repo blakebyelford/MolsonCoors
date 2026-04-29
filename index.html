@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blake W. Elford — Crafted Marketing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1a1410;
+    --charcoal-2: #221a14;
+    --charcoal-3: #2e251d;
+    --paper: #f1e6cd;
+    --paper-2: #e8dcbf;
+    --paper-dim: #d8c9a4;
+    --amber: #c8945c;
+    --amber-deep: #a36d3a;
+    --copper: #b8763d;
+    --gold: #d4a85c;
+    --oxblood: #6b1f1f;
+    --ink: #2a1d12;
+    --ink-soft: #4a382a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    background: var(--charcoal);
+    color: var(--paper);
+    overflow-x: hidden;
+    line-height: 1.6;
+    font-size: 18px;
+    letter-spacing: 0.01em;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: overlay;
+  }
+
+  /* PINT GLASS — fixed right side, fills with beer as you scroll */
+  .pipeline {
+    position: fixed;
+    top: 5vh;
+    right: 28px;
+    width: 56px;
+    height: 90vh;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+  .pipeline-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  /* The pint glass — tapered shape */
+  .pipeline-tube {
+    flex: 1;
+    width: 56px;
+    background:
+      linear-gradient(90deg,
+        rgba(255,255,255,0.04) 0%,
+        rgba(255,255,255,0.10) 12%,
+        rgba(255,255,255,0.02) 24%,
+        rgba(255,255,255,0.02) 76%,
+        rgba(255,255,255,0.10) 88%,
+        rgba(255,255,255,0.04) 100%);
+    border: 2px solid rgba(255, 240, 200, 0.35);
+    border-bottom: 4px solid rgba(255, 240, 200, 0.45);
+    border-radius: 4px 4px 8px 8px;
+    /* Pint glass taper using clip-path */
+    clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      inset 2px 0 4px rgba(255,255,255,0.15),
+      inset -2px 0 4px rgba(255,255,255,0.15),
+      inset 0 -2px 6px rgba(0,0,0,0.4),
+      0 0 20px rgba(255, 240, 200, 0.08);
+  }
+  /* The beer liquid */
+  .pipeline-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--fill, 0%);
+    background: linear-gradient(180deg,
+      #f4c542 0%,
+      #e8a82c 25%,
+      #d4881a 60%,
+      #a3631a 100%);
+    transition: height 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+      inset 0 8px 12px rgba(255, 230, 150, 0.4),
+      inset 0 -4px 8px rgba(80, 40, 0, 0.3);
+  }
+  /* Foam head on top of the beer */
+  .pipeline-fill::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -2px;
+    right: -2px;
+    height: 16px;
+    background:
+      radial-gradient(ellipse at 20% 60%, #fffaf0 0%, #fffaf0 30%, transparent 31%),
+      radial-gradient(ellipse at 50% 40%, #fffaf0 0%, #fffaf0 35%, transparent 36%),
+      radial-gradient(ellipse at 80% 60%, #fffaf0 0%, #fffaf0 30%, transparent 31%),
+      radial-gradient(ellipse at 35% 80%, #fffaf0 0%, #fffaf0 25%, transparent 26%),
+      radial-gradient(ellipse at 65% 80%, #fffaf0 0%, #fffaf0 25%, transparent 26%),
+      linear-gradient(180deg, #fffaf0 60%, #f5ead5 100%);
+    border-radius: 50% 50% 0 0 / 80% 80% 0 0;
+    box-shadow:
+      0 -2px 8px rgba(255, 250, 240, 0.5),
+      inset 0 -3px 4px rgba(220, 200, 170, 0.3);
+  }
+  /* Highlight gleam on liquid */
+  .pipeline-fill::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 18%;
+    width: 14%;
+    bottom: 0;
+    background: linear-gradient(180deg,
+      rgba(255, 250, 220, 0.5) 0%,
+      rgba(255, 250, 220, 0.15) 50%,
+      transparent 100%);
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+  /* Bubbles container — sits inside the glass */
+  .pipeline-bubbles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .bubble {
+    position: absolute;
+    bottom: 0;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 250, 220, 0.85);
+    border-radius: 50%;
+    box-shadow: inset -1px -1px 1px rgba(220, 180, 100, 0.4);
+    opacity: 0;
+    animation: rise linear infinite;
+  }
+  .bubble:nth-child(1) { left: 22%; width: 5px; height: 5px; animation-duration: 4.2s; animation-delay: 0s; }
+  .bubble:nth-child(2) { left: 48%; width: 3px; height: 3px; animation-duration: 3.5s; animation-delay: 0.8s; }
+  .bubble:nth-child(3) { left: 68%; width: 6px; height: 6px; animation-duration: 5s; animation-delay: 1.5s; }
+  .bubble:nth-child(4) { left: 35%; width: 3px; height: 3px; animation-duration: 3.8s; animation-delay: 2.2s; }
+  .bubble:nth-child(5) { left: 78%; width: 4px; height: 4px; animation-duration: 4.5s; animation-delay: 0.4s; }
+  .bubble:nth-child(6) { left: 30%; width: 5px; height: 5px; animation-duration: 4s; animation-delay: 3s; }
+  .bubble:nth-child(7) { left: 60%; width: 3px; height: 3px; animation-duration: 3.2s; animation-delay: 1.2s; }
+  .bubble:nth-child(8) { left: 50%; width: 4px; height: 4px; animation-duration: 4.6s; animation-delay: 2.6s; }
+  @keyframes rise {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 0.9; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(-100%); opacity: 0; }
+  }
+  /* Glass base — coaster */
+  .pipeline-cap {
+    width: 64px;
+    height: 8px;
+    background: linear-gradient(180deg, rgba(255,240,200,0.2) 0%, rgba(40,30,20,0.8) 100%);
+    border: 1px solid rgba(255, 240, 200, 0.25);
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+  .pipeline-percent {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    margin-top: 10px;
+    letter-spacing: 0.2em;
+  }
+
+  /* TOP TICKER BAR */
+  .ticker {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--charcoal);
+    border-bottom: 1px solid rgba(184, 118, 61, 0.3);
+    padding: 10px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 60;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+  .ticker-mid { color: var(--paper-dim); }
+
+  /* SECTION BASE */
+  section {
+    padding: 120px 80px;
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 80px;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: var(--amber);
+  }
+  .hero-eyebrow::after { flex: 1; max-width: 200px; }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(64px, 11vw, 168px);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+    margin-bottom: 24px;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+  }
+
+  .hero-tagline {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(22px, 3vw, 34px);
+    color: var(--paper-dim);
+    max-width: 760px;
+    line-height: 1.35;
+    margin-bottom: 56px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta b {
+    color: var(--amber);
+    font-weight: 500;
+    font-size: 9px;
+  }
+  .hero-meta a { color: var(--paper-dim); text-decoration: none; }
+  .hero-meta a:hover { color: var(--amber); }
+
+  /* SEAL */
+  .seal {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    width: 180px;
+    height: 180px;
+    border: 2px solid var(--amber);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    color: var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    background: radial-gradient(circle, rgba(184, 118, 61, 0.05) 0%, transparent 70%);
+  }
+  .seal::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--amber);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .seal-batch {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--amber);
+    margin: 8px 0;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    font-style: italic;
+  }
+  .seal-est { font-size: 8px; }
+
+  /* SECTION HEADERS */
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    letter-spacing: 0.3em;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 6vw, 84px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    color: var(--paper);
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 300;
+  }
+  .section-sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--paper-dim);
+    margin-bottom: 80px;
+    font-weight: 300;
+  }
+
+  /* TASTING NOTES */
+  .notes-card {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 80px 90px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    margin-top: 40px;
+  }
+  .notes-card::before, .notes-card::after {
+    content: '';
+    position: absolute;
+    width: 30px; height: 30px;
+    border: 2px solid var(--amber-deep);
+  }
+  .notes-card::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .notes-card::after { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+  .notes-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--amber-deep);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+  }
+  .notes-label::before, .notes-label::after {
+    content: '';
+    height: 1px;
+    width: 80px;
+    background: var(--amber-deep);
+  }
+  .notes-card h3 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 32px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .notes-card p {
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 24px;
+  }
+  .notes-card p:last-child { margin-bottom: 0; }
+  .notes-card p strong {
+    color: var(--ink);
+    font-weight: 600;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+  .notes-divider {
+    text-align: center;
+    margin: 32px 0;
+    color: var(--amber-deep);
+    letter-spacing: 0.5em;
+    font-size: 14px;
+  }
+
+  /* THE PROCESS — vertical line + role cards */
+  .process-line {
+    position: relative;
+    padding-left: 64px;
+  }
+  .process-line::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--amber) 0%, var(--copper) 50%, var(--oxblood) 100%);
+  }
+  .role {
+    position: relative;
+    margin-bottom: 80px;
+    padding: 40px 48px;
+    background: rgba(46, 37, 29, 0.4);
+    border: 1px solid rgba(184, 118, 61, 0.25);
+    backdrop-filter: blur(2px);
+  }
+  .role::before {
+    content: '';
+    position: absolute;
+    left: -58px;
+    top: 48px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 4px var(--charcoal), 0 0 20px var(--amber);
+  }
+  .role-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .role-tag .vintage { color: var(--paper-dim); }
+  .role h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--paper);
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .role-company {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .role-desc {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--paper-dim);
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(184, 118, 61, 0.2);
+  }
+  .role ul {
+    list-style: none;
+  }
+  .role ul li {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--paper);
+    padding: 10px 0 10px 28px;
+    position: relative;
+    border-bottom: 1px dashed rgba(184, 118, 61, 0.15);
+  }
+  .role ul li:last-child { border-bottom: none; }
+  .role ul li::before {
+    content: '◈';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    color: var(--amber);
+    font-size: 12px;
+  }
+  .role ul li strong {
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+  }
+
+  /* HOUSE SPECIALTIES — featured campaigns */
+  .specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    margin-top: 40px;
+  }
+  .bottle {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 48px 36px;
+    position: relative;
+    border-top: 6px double var(--oxblood);
+    border-bottom: 6px double var(--oxblood);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .bottle:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+  }
+  .bottle-batch {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--amber-deep);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .bottle h5 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .bottle-stat {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 600;
+    color: var(--oxblood);
+    text-align: center;
+    line-height: 1;
+    margin: 24px 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .bottle-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .bottle p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* RECIPE / SKILLS */
+  .recipe {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 70px 80px;
+    margin-top: 40px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+  .recipe-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid var(--amber-deep);
+  }
+  .recipe-header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--amber-deep);
+    text-transform: uppercase;
+  }
+  .recipe-header h3 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-top: 8px;
+  }
+  .recipe-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  .recipe-col h6 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--oxblood);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--amber-deep);
+  }
+  .recipe-col ul { list-style: none; }
+  .recipe-col li {
+    padding: 8px 0;
+    font-size: 17px;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px dashed rgba(163, 109, 58, 0.25);
+  }
+  .recipe-col li::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px dotted rgba(163, 109, 58, 0.3);
+    margin: 0 10px 4px;
+  }
+  .recipe-col li strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    font-weight: 400;
+  }
+
+  /* WHY MOLSON COORS */
+  .why {
+    text-align: center;
+    padding: 120px 40px;
+  }
+  .why-card {
+    max-width: 760px;
+    margin: 40px auto 0;
+    border: 1px solid var(--amber);
+    padding: 64px 56px;
+    background: rgba(184, 118, 61, 0.04);
+    position: relative;
+  }
+  .why-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 30px;
+    font-family: 'Fraunces', serif;
+    font-size: 120px;
+    color: var(--amber);
+    line-height: 1;
+    background: var(--charcoal);
+    padding: 0 16px;
+  }
+  .why-card p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 1.55;
+    color: var(--paper);
+  }
+  .why-card p + p {
+    margin-top: 20px;
+  }
+
+  /* FOOTER / TAP ROOM */
+  .taproom {
+    border-top: 1px solid rgba(184, 118, 61, 0.3);
+    padding: 80px 80px 60px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .taproom .num { color: var(--amber); }
+  .taproom h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 72px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .taproom h2 em {
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 300;
+  }
+  .taproom p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--paper-dim);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 0;
+    border-top: 1px solid rgba(184, 118, 61, 0.25);
+    border-bottom: 1px solid rgba(184, 118, 61, 0.25);
+  }
+  .contact-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact-grid b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .contact-grid a, .contact-grid span {
+    color: var(--paper);
+    text-decoration: none;
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+  .contact-grid a:hover { color: var(--amber); }
+
+  .footer-mark {
+    margin-top: 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--paper-dim);
+    text-transform: uppercase;
+  }
+  .footer-mark span { color: var(--amber); }
+
+  /* DECORATIVE FLOURISH */
+  .flourish {
+    text-align: center;
+    color: var(--amber);
+    font-size: 18px;
+    letter-spacing: 1em;
+    margin: 60px 0;
+    opacity: 0.7;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    section { padding: 80px 28px; }
+    .hero { padding-top: 100px; }
+    .seal { display: none; }
+    .pipeline { right: 8px; width: 36px; }
+    .pipeline-tube { width: 36px; }
+    .pipeline-cap { width: 42px; }
+    .pipeline-tag, .pipeline-percent { display: none; }
+    .hero-meta { gap: 24px; }
+    .notes-card, .recipe { padding: 50px 28px; }
+    .recipe-cols { grid-template-columns: 1fr; gap: 40px; }
+    .role { padding: 28px 24px; }
+    .process-line { padding-left: 36px; }
+    .role::before { left: -30px; }
+    .ticker { padding: 8px 16px; font-size: 9px; }
+    .ticker-mid { display: none; }
+    .why-card { padding: 48px 28px; }
+    .taproom { padding: 60px 28px 40px; }
+    .taproom h2 { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER BAR -->
+<div class="ticker">
+  <span>Blake Elford × Crafted Marketing</span>
+  <span class="ticker-mid">Batch No. 026 / Vintage 2026</span>
+  <span>Chicago, IL</span>
+</div>
+
+<!-- PINT GLASS -->
+<div class="pipeline" aria-hidden="true">
+  <div class="pipeline-tag">POUR<br>METER</div>
+  <div class="pipeline-tube">
+    <div class="pipeline-bubbles">
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+      <span class="bubble"></span>
+    </div>
+    <div class="pipeline-fill" id="pipelineFill"></div>
+  </div>
+  <div class="pipeline-cap"></div>
+  <div class="pipeline-percent" id="pipelinePct">00%</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="seal">
+    <div class="seal-est">EST.</div>
+    <div class="seal-batch">2019</div>
+    <div>Six Years<br>In The Trade</div>
+  </div>
+  <div class="hero-eyebrow">A Crafted Career In Marketing</div>
+  <h1>Blake W.<br><em>Elford</em></h1>
+  <div class="hero-tagline">
+    Integrated B2B marketing manager — distilling buyer insight, agency management, and sales partnership into programs that move the market.
+  </div>
+  <div class="hero-meta">
+    <span><b>Location</b>Chicago, IL</span>
+    <span><b>Available</b>April 2026</span>
+    <span><b>For</b>Molson Coors / Shopper Marketing</span>
+    <span><b>Reach</b><a href="mailto:blakebyelford@gmail.com">blakebyelford@gmail.com</a></span>
+    <span><b>Line</b>(281) 928-8447</span>
+  </div>
+</section>
+
+<!-- TASTING NOTES / SUMMARY -->
+<section>
+  <div class="section-num">— I —</div>
+  <h2 class="section-title">The <em>Distiller's</em> Notes</h2>
+  <p class="section-sub">A character profile — what's in the bottle.</p>
+
+  <div class="notes-card">
+    <div class="notes-label">Tasting Notes</div>
+    <h3>Six years aged in startup grit and enterprise scale.</h3>
+    <p>An integrated marketing manager with a track record of <strong>developing insight-driven programs</strong>, managing agency partners, and partnering with sales teams to deliver solutions that drive measurable results. Built and executed brand and segment marketing programs for a combined ~$418M serviceable market, coordinating cross-functional stakeholders across creative, sales, and channel teams.</p>
+    <div class="notes-divider">✦ ✦ ✦</div>
+    <p>Generated <strong>$670K+ in pipeline</strong> from a single targeted campaign, reduced cost per lead by <strong>90%</strong>, and led activations across 10+ industry conferences contributing to <strong>$10M+ in new opportunities</strong>. Known for translating market and buyer insights into compelling sell stories, managing the creative process from brief through execution, and ensuring programs are adopted in the field.</p>
+  </div>
+</section>
+
+<!-- THE PROCESS / EXPERIENCE -->
+<section>
+  <div class="section-num">— II —</div>
+  <h2 class="section-title">The <em>Process</em></h2>
+  <p class="section-sub">Career, presented batch by batch.</p>
+
+  <div class="process-line">
+
+    <div class="role">
+      <div class="role-tag">
+        <span>Batch No. 003</span>
+        <span class="vintage">Vintage Jul 2024 – Apr 2026</span>
+      </div>
+      <h4>Associate Marketing Manager</h4>
+      <div class="role-company">Life Fitness / Hammer Strength</div>
+      <div class="role-desc">Global leader in commercial fitness equipment.</div>
+      <ul>
+        <li>Translated seller feedback, customer research, and market trends into segment-specific programs and messaging frameworks for Hospitality and Multi-Unit Housing, representing a combined <strong>~$418M serviceable market</strong>.</li>
+        <li>Launched <strong>"A Stay That Moves You,"</strong> the segment's first full-funnel integrated campaign — developing the creative brief and four messaging pillars, then coordinating execution across social, content/SEO, web, email, and trade media around a unified positioning shift.</li>
+        <li>Designed and facilitated quarterly VoC calls with field sellers across three segment tiers, surfacing competitive intelligence, buyer motivations, and content gaps that directly informed programming, messaging, and sales enablement assets.</li>
+        <li>Synthesized third-party research and field insight into a consultative <strong>$700K+/year key account pitch</strong>, creating a clear sell story that shaped design, digital, and product discussions.</li>
+        <li>Managed outside partners and internal stakeholders across web, content, creative, events, and paid support to keep programs moving from brief through launch with clear communication and follow-through.</li>
+        <li>Ran a targeted promotional campaign using Pardot automation and personalized seller sends to 8,000+ contacts, generating <strong>$670K+ in attributed pipeline</strong>.</li>
+        <li>Partnered with field sellers and key account teams to create pitch decks, one-pagers, brochures, landing pages, and email templates that made programs easier to execute in the market.</li>
+        <li>Presented business results and program performance to cross-functional stakeholders, using campaign analytics to inform future strategy and improve adoption across the sales team.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-tag">
+        <span>Batch No. 002</span>
+        <span class="vintage">Vintage May 2019 – Jun 2024</span>
+      </div>
+      <h4>Marketing Director · Manager · Associate</h4>
+      <div class="role-company">Fuel Me</div>
+      <div class="role-desc">High-growth B2B SaaS startup in fuel logistics — sole in-house marketer.</div>
+      <ul>
+        <li>Scaled the company's marketing function from the ground up through an <strong>$18M Series A</strong>, owning all strategy and execution across demand generation, content, email, paid media, CRM, and website.</li>
+        <li>Grew a full-funnel demand generation engine that contributed to <strong>5x year-over-year sales growth</strong> and supported enterprise wins including Lidl, Kroger, and Digital Realty.</li>
+        <li>Diagnosed keyword strategy and intent issues across paid search, cutting cost per lead by <strong>90%</strong> from roughly $900 to $90 while improving lead quality.</li>
+        <li>Implemented HubSpot CRM company-wide and onboarded the organization on workflows, reporting, and pipeline management — creating the company's first real marketing infrastructure.</li>
+        <li>Oversaw agencies and offshore contractors across SEO, landing pages, creative, and web development to maintain execution quality without in-house headcount.</li>
+        <li>Created customer-facing assets spanning case studies, sales decks, onboarding materials, and content mapped to each stage of the buyer journey.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOUSE SPECIALTIES -->
+<section>
+  <div class="section-num">— III —</div>
+  <h2 class="section-title">House <em>Specialties</em></h2>
+  <p class="section-sub">Selected programs from the cellar.</p>
+
+  <div class="specialties-grid">
+    <div class="bottle">
+      <div class="bottle-batch">Reserve · Hospitality</div>
+      <h5>A Stay That Moves You</h5>
+      <div class="bottle-stat">1<sup style="font-size:32px;">st</sup></div>
+      <div class="bottle-stat-label">Integrated Campaign Of Its Kind</div>
+      <p>Wrote the brief, built the messaging pillars, and coordinated social, content, web, and email teams around a unified positioning shift from product to operator.</p>
+    </div>
+
+    <div class="bottle">
+      <div class="bottle-batch">Single Origin · MUH</div>
+      <h5>Warranty Promotion</h5>
+      <div class="bottle-stat">$670K<sup style="font-size:24px;">+</sup></div>
+      <div class="bottle-stat-label">Attributed Pipeline · One Campaign</div>
+      <p>Personalized seller sends to 8,000+ contacts, sourced through Salesforce and ZoomInfo enrichment, executed via Pardot Engagement Studio.</p>
+    </div>
+
+    <div class="bottle">
+      <div class="bottle-batch">Vintage 2025 · Events</div>
+      <h5>Conference Activation</h5>
+      <div class="bottle-stat">$10M<sup style="font-size:24px;">+</sup></div>
+      <div class="bottle-stat-label">In Event-Attributed Opportunities</div>
+      <p>Marketing activation across 10+ conferences in 2025, plus a custom Atmos product launch installation at HFA recreating a hospitality gym environment.</p>
+    </div>
+
+    <div class="bottle">
+      <div class="bottle-batch">Aged · Paid Media</div>
+      <h5>Cost Per Lead Reset</h5>
+      <div class="bottle-stat">90%</div>
+      <div class="bottle-stat-label">Reduction In Cost Per Lead</div>
+      <p>Diagnosed keyword strategy and intent misalignment at Fuel Me, cutting CPL from ~$900 to ~$90 while improving lead quality through an offshore execution team.</p>
+    </div>
+
+    <div class="bottle">
+      <div class="bottle-batch">Limited · Strategic Account</div>
+      <h5>$700K Key Account RFP</h5>
+      <div class="bottle-stat">3rd<sup style="font-size:24px;">-Party</sup></div>
+      <div class="bottle-stat-label">Research Synthesized Into Sell Story</div>
+      <p>Built a consultative pitch narrative drawing from McKinsey, Global Wellness Institute, and ACSM that set the table for design, digital, and product sessions.</p>
+    </div>
+
+    <div class="bottle">
+      <div class="bottle-batch">Operations · Data</div>
+      <h5>CRM Data Enrichment</h5>
+      <div class="bottle-stat">50→13%</div>
+      <div class="bottle-stat-label">Missing-Title Gap Reduced</div>
+      <p>Diagnosed CRM data quality, partnered with RevOps and ZoomInfo on enrichment, unlocking role-based segmentation and more relevant outreach across the database.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RECIPE / SKILLS -->
+<section>
+  <div class="section-num">— IV —</div>
+  <h2 class="section-title">The <em>Recipe</em></h2>
+  <p class="section-sub">Ingredients, instruments, and house tools.</p>
+
+  <div class="recipe">
+    <div class="recipe-header">
+      <div class="label">Master Recipe Card · Filed Under: BWE</div>
+      <h3>What goes into the work.</h3>
+    </div>
+    <div class="recipe-cols">
+      <div class="recipe-col">
+        <h6>Disciplines</h6>
+        <ul>
+          <li>Integrated Campaign Development<strong>Lead</strong></li>
+          <li>Go-to-Market Strategy<strong>Lead</strong></li>
+          <li>Sales Enablement & Partnership<strong>Lead</strong></li>
+          <li>Agency & Vendor Management<strong>Lead</strong></li>
+          <li>Creative Brief Development<strong>Lead</strong></li>
+          <li>Demand Generation<strong>Core</strong></li>
+          <li>Voice of Customer Research<strong>Core</strong></li>
+          <li>Email & Marketing Automation<strong>Core</strong></li>
+          <li>Event & Trade Show Marketing<strong>Core</strong></li>
+          <li>Cross-Functional Program Management<strong>Core</strong></li>
+        </ul>
+      </div>
+      <div class="recipe-col">
+        <h6>Platforms & Tools</h6>
+        <ul>
+          <li>Salesforce CRM<strong>Daily</strong></li>
+          <li>Pardot / Marketing Cloud<strong>Daily</strong></li>
+          <li>HubSpot CRM<strong>Daily</strong></li>
+          <li>Google Ads / Analytics<strong>Daily</strong></li>
+          <li>ZoomInfo<strong>Daily</strong></li>
+          <li>Asana<strong>Daily</strong></li>
+          <li>Adobe Creative Suite<strong>Often</strong></li>
+          <li>Canva / Figma<strong>Often</strong></li>
+          <li>Kentico CMS<strong>Often</strong></li>
+          <li>Claude (Custom Agents)<strong>Daily</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY MOLSON COORS -->
+<section class="why">
+  <div class="section-num">— V —</div>
+  <h2 class="section-title">Why <em>Molson Coors</em></h2>
+  <p class="section-sub">A note to the Shopper Marketing team.</p>
+
+  <div class="why-card">
+    <p>Two things have defined how I've approached every marketing role I've held. The first is a genuine curiosity about the people we're trying to reach. The second is a belief that the best programs come from close partnership with the sales teams who carry them into the market.</p>
+    <p>That's the posture this Shopper Marketing role seems to value, in a Chicago office I'd be proud to be part of.</p>
+  </div>
+</section>
+
+<div class="flourish">✦ ✦ ✦</div>
+
+<!-- TAP ROOM / CONTACT -->
+<div class="taproom">
+  <div class="section-num"><span class="num">— VI —</span></div>
+  <h2>The <em>Tap Room</em></h2>
+  <p>Pull up a stool. Let's talk.</p>
+
+  <div class="contact-grid">
+    <div>
+      <b>Email</b>
+      <a href="mailto:blakebyelford@gmail.com">blakebyelford@gmail.com</a>
+    </div>
+    <div>
+      <b>Phone</b>
+      <a href="tel:+12819288447">(281) 928-8447</a>
+    </div>
+    <div>
+      <b>LinkedIn</b>
+      <a href="https://linkedin.com/in/blakeelford" target="_blank" rel="noopener">/in/blakeelford</a>
+    </div>
+    <div>
+      <b>Based In</b>
+      <span>Chicago, Illinois</span>
+    </div>
+  </div>
+
+  <div class="footer-mark">
+    Crafted with intention · <span>Vintage 2026</span> · Chicago Made
+  </div>
+</div>
+
+<script>
+  // Pipeline fill on scroll
+  const fill = document.getElementById('pipelineFill');
+  const pct = document.getElementById('pipelinePct');
+  function updatePipeline() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = Math.max(0, Math.min(1, scrollTop / docHeight));
+    const percent = Math.round(ratio * 100);
+    fill.style.setProperty('--fill', percent + '%');
+    fill.style.height = percent + '%';
+    pct.textContent = String(percent).padStart(2, '0') + '%';
+  }
+  window.addEventListener('scroll', updatePipeline, { passive: true });
+  window.addEventListener('resize', updatePipeline);
+  updatePipeline();
+</script>
+
+</body>
+</html>
